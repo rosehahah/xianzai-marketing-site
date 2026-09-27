@@ -2,13 +2,17 @@
 
 静态多页面营销网站：首页位于 `index.html`；《用户协议》与《隐私政策》分别位于 `/terms/` 和 `/privacy/`，并提供 `.html` 备用路径。法律正文的源文件位于 `content/`。
 
+## GitHub Pages
+
+公开地址：`https://rosehahah.github.io/xianzai-marketing-site/`。仓库使用 Actions 自动构建，法律页面地址分别为 `/terms/` 和 `/privacy/`。
+
 ## 腾讯 EdgeOne Pages 部署
 
 - 构建命令：`pip install -r requirements.txt && python3 build.py`
 - 输出目录：`dist`
 - 入口页面：`dist/index.html`
 
-若平台提供 GitHub 自动部署，连接此私有仓库的 `main` 分支即可；本项目不依赖 Node.js，也没有价格页面。
+GitHub Pages 会在推送到 `main` 后自动构建并发布；输出目录为 `dist`。腾讯 EdgeOne Pages 也可连接此公开仓库的 `main` 分支，本项目不依赖 Node.js，也没有价格页面。
 
 本地预览：`python3 build.py` 后运行 `cd dist && python3 -m http.server 4173`，访问 `http://localhost:4173/`。
 

@@ -2,16 +2,36 @@
 """Assemble a dependency-light static site and render the supplied Markdown policies."""
 from pathlib import Path
 import shutil
+import os
+import re
 from markdown_it import MarkdownIt
 
 ROOT = Path(__file__).resolve().parent
 DIST = ROOT / 'dist'
+BASE_PATH = os.environ.get('SITE_BASE_PATH', '').strip('/')
+BASE_PREFIX = f'/{BASE_PATH}' if BASE_PATH else ''
+
+def with_base_path(value: str) -> str:
+    if not BASE_PREFIX:
+        return value
+    return re.sub(r'(["\'(])/(?!/)', lambda match: match.group(1) + BASE_PREFIX + '/', value)
+
 if DIST.exists():
     shutil.rmtree(DIST)
 DIST.mkdir(parents=True)
 for name in ('index.html', 'site.css', 'site.js', 'favicon.svg'):
-    shutil.copy2(ROOT / name, DIST / name)
+    source = ROOT / name
+    target = DIST / name
+    if source.suffix in ('.html', '.css', '.js', '.svg'):
+        target.write_text(with_base_path(source.read_text(encoding='utf-8')), encoding='utf-8')
+    else:
+        shutil.copy2(source, target)
 shutil.copytree(ROOT / 'assets', DIST / 'assets')
+
+if BASE_PREFIX:
+    # The template manifest contains root-relative image paths used by the gallery.
+    manifest = DIST / 'assets' / 'templates.json'
+    manifest.write_text(with_base_path(manifest.read_text(encoding='utf-8')), encoding='utf-8')
 
 terms = (ROOT / 'content' / '用户协议.md').read_text(encoding='utf-8')
 privacy = (ROOT / 'content' / '隐私政策.md').read_text(encoding='utf-8')
@@ -36,8 +56,8 @@ def legal_page(title: str, slug: str, content: str) -> str:
 for slug, title, content in (('terms', '用户协议', terms), ('privacy', '隐私政策', privacy)):
     route = DIST / slug
     route.mkdir()
-    (route / 'index.html').write_text(legal_page(title, slug, content), encoding='utf-8')
+    (route / 'index.html').write_text(with_base_path(legal_page(title, slug, content)), encoding='utf-8')
     # Also expose stable .html URLs for static hosts without clean URL support.
-    (DIST / f'{slug}.html').write_text(legal_page(title, slug, content), encoding='utf-8')
+    (DIST / f'{slug}.html').write_text(with_base_path(legal_page(title, slug, content)), encoding='utf-8')
 
 print(f'Built static site: {DIST}')
