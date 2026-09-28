@@ -19,7 +19,7 @@ def with_base_path(value: str) -> str:
 if DIST.exists():
     shutil.rmtree(DIST)
 DIST.mkdir(parents=True)
-for name in ('index.html', 'site.css', 'site.js', 'favicon.svg'):
+for name in ('index.html', 'site.css', 'site.js', 'favicon.png'):
     source = ROOT / name
     target = DIST / name
     if source.suffix in ('.html', '.css', '.js', '.svg'):
@@ -46,7 +46,7 @@ def legal_page(title: str, slug: str, content: str) -> str:
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f4f5f8"><meta name="robots" content="index,follow">
 <meta name="description" content="苋在{title}全文。">
-<title>{title}｜苋在</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="stylesheet" href="/site.css">
+<title>{title}｜苋在</title><link rel="icon" type="image/png" href="/favicon.png"><link rel="stylesheet" href="/site.css">
 </head><body class="legal-page">
 <header class="legal-top"><a class="legal-back" href="/">← 返回苋在</a><a class="brand" href="/" aria-label="苋在首页"><img src="/assets/app-icon.png" alt="" width="40" height="40"><span>苋在</span></a><nav class="legal-top-links" aria-label="法律页面"><a href="/terms/">用户协议</a><a href="/privacy/">隐私政策</a></nav></header>
 <main class="legal-main"><p class="legal-kicker">XIÁNZÀI / LEGAL</p><h1>{title}</h1><article class="legal-content">{article}</article></main>
