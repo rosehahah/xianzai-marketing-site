@@ -1,7 +1,7 @@
 # XianNow Privacy Policy
 
-**Last updated: September 28, 2026**\
-**Effective: September 28, 2026**
+**Last updated: October 2, 2026**\
+**Effective: October 2, 2026**
 
 Welcome to XianNow (苋在, the “App,” “XianNow,” or “we”). We value your personal information and privacy. This Policy explains what information is processed when you use XianNow, why it is processed, how it is protected, and how you can exercise your rights. Please read it before using the App. If you do not agree, stop using the relevant features. Except where the law permits otherwise, we will not process relevant personal information before obtaining any authorization that is required.
 
@@ -28,13 +28,19 @@ You can manage permissions at any time in iOS Settings. If you deny or withdraw 
 
 Local weather uses Apple WeatherKit. Apple processes the relevant coordinates to return weather results. XianNow stores only the most recent location/weather state needed by the feature on your device and does not build a location history. Apple's processing is governed by the [Apple Privacy Policy](https://www.apple.com/legal/privacy/).
 
-### 1.3 Operation, Purchases, and Diagnostics
+### 1.3 Online Official Template Catalog
+
+After you agree to this Policy and enter the App, XianNow requests the published official template catalog through cloud services provided by Supabase so that the latest official templates can be displayed. The request retrieves only public template configuration. It does not upload your photos, videos, avatar, user-created templates, personal filters, creative files, contacts, or precise location. If the network or service is unavailable, the App continues to use the local templates bundled with the App, and core shooting features remain available.
+
+To deliver requests, secure the service, and diagnose faults, Supabase and its infrastructure providers may process and retain for a limited period an IP address, request time, request path, response status, and network-connection information, and may infer an approximate region from the IP address. We do not use this information for personalized advertising, cross-app tracking, or user profiling. Supabase's processing, storage locations, and retention periods are governed by its [Privacy Policy](https://supabase.com/privacy) and the service configuration of the project we use.
+
+### 1.4 Operation, Purchases, and Diagnostics
 
 To keep the App working, iOS, Apple StoreKit, or Apple WeatherKit may process device, system, network, transaction, or service-operation information through their own mechanisms. Film-roll items are offered and processed through the Apple App Store. We do not collect or store your bank card number, payment password, or Apple Account password.
 
 We use the RevenueCat purchase-validation SDK to verify App Store film-roll orders and prevent duplicate fulfillment. The SDK initializes only after you agree to this Policy and enter the App. It generates an anonymous App user identifier and processes App and device information needed to provide purchase validation. When you make or restore a purchase, RevenueCat also processes the purchase history, product identifier, and transaction-validation information provided by StoreKit. We have no account system and do not associate the anonymous identifier with your name, email address, or phone number. RevenueCat does not receive your photos or creative files, bank card number, payment password, or Apple Account password. Purchase records are used for purchase validation, order fulfillment, and related product analytics—not for cross-app advertising tracking. See the [RevenueCat Privacy Policy](https://www.revenuecat.com/privacy/) for details.
 
-### 1.4 Umeng Mobile Analytics SDK (U-App)
+### 1.5 Umeng Mobile Analytics SDK (U-App)
 
 We use the **Umeng Mobile Analytics SDK (U-App)** to understand feature usage in aggregate, identify product issues, and improve the experience. Umeng Analytics is off by default on first launch. It initializes only after you actively enable “Allow Usage Analytics (Optional)” in the App and agree to this Policy. Declining or turning off analytics does not affect the camera, Frames, or other core features.
 
@@ -48,17 +54,18 @@ Umeng analytics are used for aggregate product analysis, not to identify you in 
 
 1. We process only the information needed for the purposes described in this Policy: shooting, creating, saving, weather, purchase fulfillment, analytics, and secure operation. We do not sell personal information.
 2. Creative files, photos, and most settings are stored on your device. Uninstalling the App, clearing App data, damage to the device, or changing devices may make local data unrecoverable. You manage anything saved to the system photo library through iOS Photos. Weather cache and local settings can be cleared with the App's data.
-3. Umeng provides analytics, RevenueCat validates purchase orders, and Apple processes data through StoreKit, WeatherKit, and system photo services under its own rules. Each provider processes necessary information under its privacy terms and service agreement. The relevant recipient and purpose are described above.
+3. Supabase provides the online official template service, Umeng provides analytics, RevenueCat validates purchase orders, and Apple processes data through StoreKit, WeatherKit, and system photo services under its own rules. Each provider processes necessary information under its privacy terms and service agreement. The relevant recipient and purpose are described above.
 4. We use reasonable technical and administrative safeguards, restrict access, and minimize unnecessary collection. No internet transmission or electronic storage is absolutely secure. If a security incident legally requires notice, we will respond as required by law.
 
 ## 3. Sharing, Transfer, and Public Disclosure
 
 We do not provide personal information to third parties except:
 
-1. to provide Apple with information necessary for weather queries, App Store purchases, or system photo/sharing services that you actively use;
-2. after you actively enable Umeng Analytics and agree to this Policy, to provide Umeng with the analytics information described here;
-3. to provide RevenueCat with the transaction and necessary service information returned by StoreKit in order to validate and fulfill a film-roll purchase you initiate;
-4. where required by applicable law or by a lawful request from a judicial or administrative authority, or where necessary to protect you, other users, the public, or our lawful rights and interests.
+1. after you agree to this Policy and enter the App, to send Supabase the network-request information needed to retrieve the online official template catalog and secure the service;
+2. to provide Apple with information necessary for weather queries, App Store purchases, or system photo/sharing services that you actively use;
+3. after you actively enable Umeng Analytics and agree to this Policy, to provide Umeng with the analytics information described here;
+4. to provide RevenueCat with the transaction and necessary service information returned by StoreKit in order to validate and fulfill a film-roll purchase you initiate;
+5. where required by applicable law or by a lawful request from a judicial or administrative authority, or where necessary to protect you, other users, the public, or our lawful rights and interests.
 
 We do not publish your photos or creative content, sell or rent it, or use it to train artificial-intelligence models. If the service architecture or data recipient changes materially, we will update this Policy and obtain any authorization required by law.
 
@@ -85,6 +92,7 @@ Email: [hanr6969@gmail.com](mailto:hanr6969@gmail.com)
 
 - [Umeng+ Privacy Policy](https://www.umeng.com/page/policy/)
 - [RevenueCat Privacy Policy](https://www.revenuecat.com/privacy/)
+- [Supabase Privacy Policy](https://supabase.com/privacy)
 - [Apple Privacy Policy](https://www.apple.com/legal/privacy/)
 - [Apple App Review Guidelines: Privacy](https://developer.apple.com/app-store/review/guidelines/)
 
