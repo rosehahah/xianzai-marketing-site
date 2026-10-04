@@ -1,7 +1,7 @@
 # XianNow Privacy Policy
 
-**Last updated: October 2, 2026**\
-**Effective: October 2, 2026**
+**Last updated: October 4, 2026**\
+**Effective: October 4, 2026**
 
 Welcome to XianNow (苋在, the “App,” “XianNow,” or “we”). We value your personal information and privacy. This Policy explains what information is processed when you use XianNow, why it is processed, how it is protected, and how you can exercise your rights. Please read it before using the App. If you do not agree, stop using the relevant features. Except where the law permits otherwise, we will not process relevant personal information before obtaining any authorization that is required.
 
@@ -40,21 +40,31 @@ To keep the App working, iOS, Apple StoreKit, or Apple WeatherKit may process de
 
 We use the RevenueCat purchase-validation SDK to verify App Store film-roll orders and prevent duplicate fulfillment. The SDK initializes only after you agree to this Policy and enter the App. It generates an anonymous App user identifier and processes App and device information needed to provide purchase validation. When you make or restore a purchase, RevenueCat also processes the purchase history, product identifier, and transaction-validation information provided by StoreKit. We have no account system and do not associate the anonymous identifier with your name, email address, or phone number. RevenueCat does not receive your photos or creative files, bank card number, payment password, or Apple Account password. Purchase records are used for purchase validation, order fulfillment, and related product analytics—not for cross-app advertising tracking. See the [RevenueCat Privacy Policy](https://www.revenuecat.com/privacy/) for details.
 
-### 1.5 Umeng Mobile Analytics SDK (U-App)
+### 1.5 Feature Usage Counters
 
-We use the **Umeng Mobile Analytics SDK (U-App)** to understand feature usage in aggregate, identify product issues, and improve the experience. Umeng Analytics is off by default on first launch. It initializes only after you actively enable “Allow Usage Analytics (Optional)” in the App and agree to this Policy. Declining or turning off analytics does not affect the camera, Frames, or other core features.
+We use our existing Supabase cloud service to understand feature usage in aggregate and improve XianNow. This feature is off by default and sends counters only after you actively enable “Help Improve XianNow” under “Settings & Help.” Agreeing to the Terms of Use and this Policy does not enable analytics. Declining or disabling analytics does not affect capture, Frames, saving, purchases, or other features.
 
-The Umeng SDK may process basic device and system information—such as device model, operating system and version, App version, language, network status, device identifiers, and network-connection information—and receive events such as page views and time spent, Frame use, the shooting flow, views and taps on paid-feature pages, and purchase-flow results. Events we define carry only the necessary page category, Frame type, film-roll package quantity, and flow result. They do not include Frame names, photos or videos, precise location, or payment credentials. We disable ASA and SKAdNetwork attribution collection, do not request IDFA, and do not enable personalized advertising or cross-app tracking. The information actually processed depends on this Policy, the Umeng SDK version, and the [Umeng Personal Information Processing Rules](https://www.umeng.com/page/policy/).
+A counter request contains only a fixed event category, a necessary fixed classification (page category, official or custom Frame, film-pack quantity, or photo/Live Photo type), and time spent in seconds. The server accumulates counts and duration by UTC date and category. It does not create individual usage histories or store individual event records. We do not send or store account, user, device, session, IDFA, or IDFV identifiers for analytics. Counters exclude photos, videos, facial landmarks, precise location, Frame names, user-entered content, transaction identifiers, and payment credentials. We do not use counters for advertising, attribution, cross-app linking, identification, or AI training, or provide them to advertising networks or data brokers. This version does not include the Umeng analytics SDK.
 
-Analytics events do not include photos, videos, contacts, precise location, payment passwords, or bank card information. We do not enable advertising attribution, personalized advertising, app-list access, or optional location collection, and we do not use IDFA for cross-app tracking. If we need to add a data type or purpose in the future, we will first update this Policy and obtain any separate consent required by law. Umeng's processing is also subject to the [Umeng Privacy Policy](https://www.umeng.com/page/policy/) and its SDK compliance materials.
+The online aggregate table is stored in our Supabase project in the Sydney, Australia region. Only authorized administrators can view it. Rows outside the most recent 90 calendar days are deleted automatically each day. To deliver and protect requests, Supabase and its infrastructure providers process network-connection information such as IP address, request time, path, and status. Infrastructure-log and backup retention, storage, and deletion are governed by the service configuration and [Supabase Privacy Policy](https://supabase.com/privacy). We do not link these logs to counters to build user profiles.
 
-Umeng analytics are used for aggregate product analysis, not to identify you in real life or serve targeted advertising. You may disable “Usage Analytics” under “Settings & Help” in the App. The App will call Umeng's analytics-disable interface and immediately stop actively sending custom analytics events from XianNow. You must act affirmatively to enable it again. Information sent before you disable analytics is handled under Umeng's rules; aggregate statistics that can no longer identify an individual may not be separately deletable. We handle analytics under Umeng's rules and applicable law.
+You can turn off “Help Improve XianNow” at any time under “Settings & Help.” The App stops sending new counter requests and cancels requests still in progress. Counters already received by the server cannot be recalled. The App does not persist an upload queue or upload actions taken while analytics was off when it is enabled again. Because the aggregate table contains no personal or device identifiers, an individual's contribution cannot be identified or separately deleted. Contact us at the email address in this Policy with questions about processing or deletion.
+
+### 1.6 Face Data and On-Device Retouching
+
+**Data and purpose.** When you enable retouching or makeup effects, XianNow uses Apple Vision on the device to detect two-dimensional face bounds, contours, and landmarks around the eyes, eyebrows, and inner and outer lips. These geometric data are used only for smoothing, brightening, face slimming, eye enlargement, blush, eyeshadow, lip color, and stabilizing these effects. They are not used to identify or authenticate anyone, create a face-identity database, advertise, profile users, collect usage analytics, or train AI models.
+
+**Sharing and storage.** Face detection and rendering take place on the device. XianNow does not upload facial landmarks or face geometry to our servers, Supabase, RevenueCat, Umeng, or any other third party, or write them to creative files, databases, or analytics logs. Calling on-device Apple Vision does not cause XianNow to upload these data to Apple. Preview detection results are held temporarily in running memory. Photo and Live Photo rendering also occurs locally.
+
+**Retention and deletion.** Preview landmarks are replaced as detection results update. The preview cache is cleared or released when retouching is disabled and the next frame is processed, the camera session stops, or the processing object is released. Stopping the camera explicitly clears the cache on the frame-processing queue. Temporary detection data used in photo or Live Photo rendering are released as processing ends and processing objects are released. We do not retain a persistent facial-landmark record.
+
+**Photos containing faces.** Saved originals, finished photos, and Live Photos may contain face images and are separate from temporary landmark data. During capture, original photos or Live Photo video may be staged in the App's local directory for rendering or retry after a failure. Once processing completes, original files are removed for records where keeping the original was not selected. When you choose to keep originals, originals and finished files remain locally until you delete them using the deletion scope offered by the App or uninstall the App. Copies saved to the system photo library are managed through iOS Photos or the App's system-photo deletion action. Deleting only an App copy or uninstalling the App does not automatically delete system-library copies. System backups or iCloud Photos sync, if enabled by you, are managed by Apple and your system settings, not a XianNow face-data upload service. Only when you actively use system sharing are the selected photos or videos passed to your chosen recipient; no separate facial-landmark record is attached.
 
 ## 2. How We Use, Store, and Protect Information
 
 1. We process only the information needed for the purposes described in this Policy: shooting, creating, saving, weather, purchase fulfillment, analytics, and secure operation. We do not sell personal information.
 2. Creative files, photos, and most settings are stored on your device. Uninstalling the App, clearing App data, damage to the device, or changing devices may make local data unrecoverable. You manage anything saved to the system photo library through iOS Photos. Weather cache and local settings can be cleared with the App's data.
-3. Supabase provides the online official template service, Umeng provides analytics, RevenueCat validates purchase orders, and Apple processes data through StoreKit, WeatherKit, and system photo services under its own rules. Each provider processes necessary information under its privacy terms and service agreement. The relevant recipient and purpose are described above.
+3. Supabase provides the online official template service and aggregate usage counters, RevenueCat validates purchase orders, and Apple processes data through StoreKit, WeatherKit, and system photo services under its own rules. Each provider processes necessary information under its privacy terms and service agreement. The relevant recipient and purpose are described above.
 4. We use reasonable technical and administrative safeguards, restrict access, and minimize unnecessary collection. No internet transmission or electronic storage is absolutely secure. If a security incident legally requires notice, we will respond as required by law.
 
 ## 3. Sharing, Transfer, and Public Disclosure
@@ -63,7 +73,7 @@ We do not provide personal information to third parties except:
 
 1. after you agree to this Policy and enter the App, to send Supabase the network-request information needed to retrieve the online official template catalog and secure the service;
 2. to provide Apple with information necessary for weather queries, App Store purchases, or system photo/sharing services that you actively use;
-3. after you actively enable Umeng Analytics and agree to this Policy, to provide Umeng with the analytics information described here;
+3. after you actively enable “Help Improve XianNow,” to provide Supabase with the counter requests described in Section 1.5;
 4. to provide RevenueCat with the transaction and necessary service information returned by StoreKit in order to validate and fulfill a film-roll purchase you initiate;
 5. where required by applicable law or by a lawful request from a judicial or administrative authority, or where necessary to protect you, other users, the public, or our lawful rights and interests.
 
@@ -73,7 +83,7 @@ We do not publish your photos or creative content, sell or rent it, or use it to
 
 To the extent provided by applicable law, you may request access to, correction of, or deletion of personal information; withdraw consent; restrict processing; or object to processing by contacting us below. We will verify and respond to a request within the period required by law. Because this version has no XianNow account system, photos, templates, filters, shooting history, and the film-roll balance are mainly stored on your device. You can manage or clear them through App features, iOS Settings, or by uninstalling the App. Uninstalling does not automatically delete photos already written to the system photo library.
 
-You can turn off camera, photo, microphone, or location permission in iOS Settings and can turn off “Usage Analytics” under “Settings & Help” in the App. Information necessary for purchase validation may be processed as needed for purchase records and order verification. To exercise deletion, access, or other rights relating to that information, contact RevenueCat or email us, and we will help route or address the request. To exercise a right or ask a question, email [hanr6969@gmail.com](mailto:hanr6969@gmail.com).
+You can turn off camera, photo, microphone, or location permission in iOS Settings and can turn off “Help Improve XianNow” under “Settings & Help” in the App. Information necessary for purchase validation may be processed as needed for purchase records and order verification. To exercise deletion, access, or other rights relating to that information, contact RevenueCat or email us, and we will help route or address the request. See Section 1.5 for analytics withdrawal and Section 1.6 for face-data and photo retention and deletion. To exercise a right or ask a question, email [hanr6969@gmail.com](mailto:hanr6969@gmail.com).
 
 ## 5. Children
 
@@ -90,7 +100,6 @@ Email: [hanr6969@gmail.com](mailto:hanr6969@gmail.com)
 
 ## Related Policies
 
-- [Umeng+ Privacy Policy](https://www.umeng.com/page/policy/)
 - [RevenueCat Privacy Policy](https://www.revenuecat.com/privacy/)
 - [Supabase Privacy Policy](https://supabase.com/privacy)
 - [Apple Privacy Policy](https://www.apple.com/legal/privacy/)
