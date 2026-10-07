@@ -11,10 +11,10 @@
   <link rel="alternate" hreflang="en" href="/en/">
   <link rel="alternate" hreflang="x-default" href="/">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="stylesheet" href="/site.css">
-  <script src="/site.js" defer></script>
+  <link rel="stylesheet" href="/site.css?v=20261007-hq-sound">
+  <script src="/site.js?v=20261007-hq-sound" defer></script>
 </head>
-<body>
+<body class="film-home">
   <a class="skip-link" href="#main">Skip to main content</a>
   <header class="site-header">
     <a class="brand" href="/en/" aria-label="XianNow home">
@@ -34,24 +34,36 @@
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-mark"></span> Give every day a frame of its own</p>
-        <h1 id="hero-title">Frame this moment<br><em>your way.</em></h1>
-        <p class="hero-deck">More than a color filter. Place your view inside a game console, a fridge door, or a story that is entirely yours.</p>
-        <div class="hero-actions">
-          <a class="button button-pink" href="#frames">Explore the frames <span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">Download on the App Store <span aria-hidden="true">↗</span></a>
+    <section class="hero hero-film" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="sr-only">XianNow · Pick a look. Shoot. You're done.</h1>
+      <figure class="hero-film-figure">
+        <div class="hero-film-stage">
+          <video id="hero-video" class="hero-video" width="3840" height="1646" poster="/assets/video/hero-en-poster.jpg?v=20261007-hq" data-landscape-poster="/assets/video/hero-en-poster.jpg?v=20261007-hq" data-portrait-poster="/assets/video/hero-en-portrait-poster.jpg?v=20261007-hq" preload="none" loop playsinline controls aria-label="XianNow camera and creative frame demo" aria-describedby="hero-video-description">
+            <source data-src="/assets/video/hero-en.mp4?v=20261007-hq" data-portrait-src="/assets/video/hero-en-portrait.mp4?v=20261007-hq" type="video/mp4">
+          </video>
+          <picture class="hero-film-poster" aria-hidden="true">
+            <source media="(max-aspect-ratio: 4/5)" srcset="/assets/video/hero-en-portrait-poster.jpg?v=20261007-hq">
+            <img src="/assets/video/hero-en-poster.jpg?v=20261007-hq" width="3840" height="1646" alt="" fetchpriority="high">
+          </picture>
+          <button class="film-start" type="button" data-video-start aria-controls="hero-video" hidden><span class="film-start-icon" aria-hidden="true">▶</span><span>Play with sound</span></button>
+          <div class="hero-video-controls" hidden>
+            <button class="film-control" type="button" data-video-play aria-controls="hero-video">Play</button>
+            <button class="film-control" type="button" data-video-sound aria-controls="hero-video" aria-pressed="true">Sound off</button>
+            <button class="film-control film-expand" type="button" data-video-expand aria-haspopup="dialog">Expand video <span aria-hidden="true">↗</span></button>
+          </div>
         </div>
-        <p class="hero-note">29 official frames · 12 mood presets · Live camera preview</p>
+        <figcaption>AI-generated example imagery for illustration.</figcaption>
+        <p id="hero-video-description" class="sr-only">A visual demo of live camera preview, capturing a photo, creative frames, moods, and characters. Example imagery is AI-generated for illustration.</p>
+        <noscript><a class="text-link" href="/assets/video/hero-en.mp4?v=20261007-hq">Watch the demo video ↗</a></noscript>
+      </figure>
+      <div class="hero-actions">
+        <a class="button button-pink" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">Download on the App Store <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="#frames">Explore frames <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="hero-art" aria-label="Examples created with XianNow frames">
-        <div class="hero-orbit orbit-one" aria-hidden="true">YOUR<br>FRAME</div>
-        <figure class="hero-image hero-image-game"><img src="/assets/templates/心动游戏机.png" alt="Play Today frame shown as a pink pixel game console" fetchpriority="high"><figcaption>01 / PLAY TODAY</figcaption></figure>
-        <figure class="hero-image hero-image-fridge"><img src="/assets/templates/甜心冰箱.png" alt="Sweet Fridge frame placing the photo inside a fridge door" fetchpriority="high"><figcaption>GOOD MOOD, INSIDE</figcaption></figure>
-        <div class="hero-scribble" aria-hidden="true">Capture<br>what you love <span>♥</span></div>
-      </div>
-      <a class="hero-scroll" href="#frames"><span></span> See the frames</a>
+      <dialog class="hero-video-dialog" aria-label="XianNow camera and creative frame demo">
+        <button class="film-control film-close" type="button" data-video-close>Close video <span aria-hidden="true">×</span></button>
+        <video class="hero-video-expanded" width="3840" height="1646" poster="/assets/video/hero-en-poster.jpg?v=20261007-hq" preload="none" controls loop playsinline aria-label="XianNow camera and creative frame demo"></video>
+      </dialog>
     </section>
 
     <section class="frame-intro section-pad" id="frames" aria-labelledby="frames-title">
@@ -101,9 +113,30 @@
       <div class="mood-bottom"><span>12 mood presets</span><span class="mood-line" aria-hidden="true"></span><span>Find today's color, from first light to nightfall</span></div>
     </section>
 
-    <section class="ip-section" id="ip" aria-labelledby="ip-title">
-      <div class="ip-copy"><p class="eyebrow">YOUR CHARACTER, YOUR FRAME / 05</p><h2 id="ip-title">Bring a favorite character<br><span>into the frame.</span></h2><p>Create or choose your own character, pick a look and pose, and bring it into any frame you love. Character images stay on this device.</p><a class="button button-dark" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">Create one in XianNow <span aria-hidden="true">↗</span></a></div>
-      <div class="ip-stage"><div class="ip-sun" aria-hidden="true"></div><img class="ip-mascot" src="/assets/mascot.png" alt="Example XianNow character" loading="lazy"><img class="ip-frame" src="/assets/templates/闺蜜咖啡.png" alt="Coffee Together frame example" loading="lazy"><span class="ip-caption">YOU + YOUR FAVORITE CHARACTER</span></div>
+    <section class="ip-section ip-world" id="ip" aria-labelledby="ip-title">
+      <div class="ip-copy"><p class="eyebrow">YOUR CHARACTER, YOUR FRAME / 05</p><h2 id="ip-title">Bring a favorite character<br><span>into the frame.</span></h2><p>Soft little Xiaoxian has some cool friends, too. Create or choose your own character, pick a look and pose, and bring it into a frame you love.</p><a class="button button-dark" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">Create one in XianNow <span aria-hidden="true">↗</span></a></div>
+      <figure class="ip-stage">
+        <div class="ip-orbit" aria-hidden="true"></div>
+        <span class="ip-stage-sticker" aria-hidden="true">HELLO,<br>LITTLE FRIEND!</span>
+        <img class="ip-star ip-star-tea" src="/assets/characters/xiaoxian-tea.webp" alt="Xiaoxian and a little friend holding bubble tea" width="506" height="551" loading="lazy" decoding="async">
+        <img class="ip-star ip-star-float" src="/assets/characters/xiaoxian-float.webp" alt="Pink leaf character Xiaoxian floating freely" width="864" height="882" loading="lazy" decoding="async">
+        <img class="ip-star ip-star-heart" src="/assets/characters/xiaoxian-heart.webp" alt="Xiaoxian winking and holding a heart" width="294" height="314" loading="lazy" decoding="async">
+        <figcaption class="ip-caption">A day with Xiaoxian · Bubble tea, little hearts, floating free</figcaption>
+      </figure>
+      <div class="character-gallery" aria-labelledby="characters-title">
+        <div class="character-gallery-heading"><h3 id="characters-title">Meet our little characters</h3><p>A little personality. A lot to love.</p></div>
+        <div class="character-lineup">
+          <figure class="character-card character-cream-bunny"><div class="character-portrait"><img src="/assets/characters/cream-bunny.webp" alt="Cream plush bunny with a pink bow and a little bell" width="366" height="366" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">01</span>A softer kind of company</figcaption></figure>
+          <figure class="character-card character-blue-plush"><div class="character-portrait"><img src="/assets/characters/blue-plush.webp" alt="Blue one-eyed plush creature showing its soft paws" width="652" height="652" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">02</span>A little hug of happiness</figcaption></figure>
+          <figure class="character-card character-cactus"><div class="character-portrait"><img src="/assets/characters/cactus.webp" alt="Green cactus character with a white flower and a cream scarf" width="314" height="314" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">03</span>Prickly, but sweet</figcaption></figure>
+          <figure class="character-card character-pearl-spirit"><div class="character-portrait"><img src="/assets/characters/pearl-spirit.webp" alt="Translucent little spirit with a pearly sheen and pink cheeks" width="289" height="289" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">04</span>A spark of imagination</figcaption></figure>
+          <figure class="character-card character-hooded-rebel"><div class="character-portrait"><img src="/assets/characters/hooded-rebel.webp" alt="One-eyed character in a red and black coat with a horned hood" width="646" height="646" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">05</span>Feeling a little cooler</figcaption></figure>
+        </div>
+        <figure class="character-family">
+          <figcaption><p class="eyebrow">THE ONE-EYED CLUB</p><h3>One eye.<br>Many little worlds.</h3><p>Plush, glass, stone, metal…<br>A different texture. A different mood.</p></figcaption>
+          <img src="/assets/characters/one-eyed-family.webp" alt="Seven one-eyed characters with black and white hoods, translucent bubbles, silver, black and gold, and stone textures" width="1246" height="830" loading="lazy" decoding="async">
+        </figure>
+      </div>
     </section>
 
     <section class="memory-section section-pad" id="memories" aria-labelledby="memory-title">

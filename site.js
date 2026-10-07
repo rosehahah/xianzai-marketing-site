@@ -130,3 +130,195 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
   });
 });
+
+// Attach only this page's film, and only when viewing or explicitly playing it.
+const heroVideo = document.querySelector('#hero-video');
+if (heroVideo) {
+  const stage = heroVideo.closest('.hero-film-stage');
+  const source = heroVideo.querySelector('source');
+  const controls = stage.querySelector('.hero-video-controls');
+  const playButton = stage.querySelector('[data-video-play]');
+  const startButton = stage.querySelector('[data-video-start]');
+  const soundButton = stage.querySelector('[data-video-sound]');
+  const expandButton = stage.querySelector('[data-video-expand]');
+  const dialog = document.querySelector('.hero-video-dialog');
+  const expandedVideo = dialog.querySelector('video');
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const connection = navigator.connection;
+  const portraitPreference = window.matchMedia('(max-aspect-ratio: 4/5)');
+  const selectedSource = () => portraitPreference.matches ? source.dataset.portraitSrc : source.dataset.src;
+  const selectPoster = () => { heroVideo.poster = portraitPreference.matches ? heroVideo.dataset.portraitPoster : heroVideo.dataset.landscapePoster; };
+  selectPoster();
+  const labels = isEnglish
+    ? { play: 'Play', playWithSound: 'Play with sound', pause: 'Pause', soundOn: 'Sound on', soundOff: 'Sound off', error: 'Video unavailable. Please try again later.' }
+    : { play: '播放', playWithSound: '播放并开启声音', pause: '暂停', soundOn: '开启声音', soundOff: '关闭声音', error: '视频暂时无法播放，请稍后重试。' };
+  let inView = false;
+  let manuallyPaused = false;
+  let explicitlyStarted = false;
+  let playbackFailed = false;
+  let autoplayBlocked = false;
+  let dialogWasPlaying = false;
+  let playAttempt = 0;
+  const automaticPlaybackAllowed = () => !motionPreference.matches && !connection?.saveData;
+  const wantsPlayback = () => inView && !document.hidden && !dialog.open && !manuallyPaused
+    && !playbackFailed && (explicitlyStarted || automaticPlaybackAllowed());
+
+  const attachSource = () => {
+    if (!source.hasAttribute('src')) {
+      source.src = selectedSource();
+      heroVideo.load();
+    }
+  };
+  const updateControls = () => {
+    const playing = !heroVideo.paused && !heroVideo.ended;
+    playButton.textContent = playing ? labels.pause : autoplayBlocked ? labels.playWithSound : labels.play;
+    startButton.hidden = !autoplayBlocked;
+    soundButton.textContent = heroVideo.muted ? labels.soundOn : labels.soundOff;
+    soundButton.setAttribute('aria-pressed', String(!heroVideo.muted));
+    stage.classList.toggle('is-playing', playing);
+  };
+  const reconcilePlayback = async () => {
+    const attempt = ++playAttempt;
+    if (!wantsPlayback()) {
+      heroVideo.pause();
+      return;
+    }
+    attachSource();
+    try {
+      await heroVideo.play();
+      if (!wantsPlayback()) heroVideo.pause();
+    } catch (error) {
+      // Keep sound enabled when policy blocks autoplay; a real click retries playback.
+      if (attempt === playAttempt && wantsPlayback()) {
+        autoplayBlocked = error.name === 'NotAllowedError' && !heroVideo.muted;
+        playbackFailed = true;
+      }
+      updateControls();
+    }
+  };
+
+  heroVideo.muted = false;
+  heroVideo.defaultMuted = false;
+  heroVideo.volume = 1;
+  heroVideo.controls = false;
+  controls.hidden = false;
+  heroVideo.addEventListener('playing', () => {
+    if (!wantsPlayback()) { heroVideo.pause(); return; }
+    autoplayBlocked = false;
+    stage.classList.add('has-frame');
+    updateControls();
+  });
+  heroVideo.addEventListener('pause', updateControls);
+  heroVideo.addEventListener('volumechange', updateControls);
+  heroVideo.addEventListener('error', () => {
+    playbackFailed = true;
+    stage.classList.remove('has-frame', 'is-playing');
+    playButton.title = labels.error;
+    updateControls();
+  });
+  playButton.addEventListener('click', () => {
+    if (!heroVideo.paused) {
+      manuallyPaused = true;
+    } else {
+      manuallyPaused = false;
+      explicitlyStarted = true;
+      playbackFailed = false;
+      autoplayBlocked = false;
+      playButton.removeAttribute('title');
+      if (heroVideo.error) heroVideo.load();
+    }
+    reconcilePlayback();
+  });
+  startButton.addEventListener('click', () => {
+    heroVideo.muted = false;
+    manuallyPaused = false;
+    explicitlyStarted = true;
+    playbackFailed = false;
+    autoplayBlocked = false;
+    if (heroVideo.error) heroVideo.load();
+    updateControls();
+    reconcilePlayback();
+  });
+  soundButton.addEventListener('click', () => {
+    heroVideo.muted = !heroVideo.muted;
+    if (heroVideo.paused) {
+      manuallyPaused = false;
+      explicitlyStarted = true;
+      playbackFailed = false;
+      autoplayBlocked = false;
+      reconcilePlayback();
+    }
+    updateControls();
+  });
+
+  const observer = new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    reconcilePlayback();
+  }, { threshold: 0.2 });
+  observer.observe(stage);
+  portraitPreference.addEventListener('change', () => {
+    const hadSource = source.hasAttribute('src');
+    selectPoster();
+    stage.classList.remove('has-frame', 'is-playing');
+    heroVideo.pause();
+    if (hadSource) {
+      source.removeAttribute('src');
+      heroVideo.load();
+      playbackFailed = false;
+      reconcilePlayback();
+    }
+    if (dialog.open) {
+      expandedVideo.src = selectedSource();
+      expandedVideo.poster = heroVideo.poster;
+      expandedVideo.play().catch(() => {});
+    }
+  });
+  document.addEventListener('visibilitychange', reconcilePlayback);
+  const preferenceChanged = () => {
+    explicitlyStarted = false;
+    if (!automaticPlaybackAllowed()) {
+      heroVideo.pause();
+      stage.classList.remove('has-frame', 'is-playing');
+    }
+    reconcilePlayback();
+  };
+  motionPreference.addEventListener('change', preferenceChanged);
+  let previousSaveData = Boolean(connection?.saveData);
+  connection?.addEventListener('change', () => {
+    const saveData = Boolean(connection.saveData);
+    if (saveData === previousSaveData) return;
+    previousSaveData = saveData;
+    preferenceChanged();
+  });
+
+  expandButton.addEventListener('click', () => {
+    dialogWasPlaying = !heroVideo.paused;
+    heroVideo.pause();
+    if (expandedVideo.getAttribute('src') !== selectedSource()) expandedVideo.src = selectedSource();
+    expandedVideo.poster = heroVideo.poster;
+    expandedVideo.muted = heroVideo.muted;
+    expandedVideo.volume = heroVideo.volume;
+    const startTime = heroVideo.currentTime;
+    const seek = () => { expandedVideo.currentTime = startTime; };
+    if (expandedVideo.readyState >= 1) seek();
+    else expandedVideo.addEventListener('loadedmetadata', seek, { once: true });
+    dialog.showModal();
+    expandedVideo.play().catch(() => {}); // Native controls remain available if play is denied.
+  });
+  dialog.querySelector('[data-video-close]').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (event) => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+  });
+  dialog.addEventListener('close', () => {
+    expandedVideo.pause();
+    heroVideo.muted = expandedVideo.muted;
+    heroVideo.volume = expandedVideo.volume;
+    if (heroVideo.readyState >= 1) heroVideo.currentTime = expandedVideo.currentTime;
+    updateControls();
+    expandButton.focus({ preventScroll: true });
+    if (dialogWasPlaying) reconcilePlayback();
+  });
+  updateControls();
+}

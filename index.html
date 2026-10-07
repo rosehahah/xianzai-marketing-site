@@ -11,10 +11,10 @@
   <link rel="alternate" hreflang="en" href="/en/">
   <link rel="alternate" hreflang="x-default" href="/">
   <link rel="icon" type="image/png" href="/favicon.png">
-  <link rel="stylesheet" href="/site.css">
-  <script src="/site.js" defer></script>
+  <link rel="stylesheet" href="/site.css?v=20261007-hq-sound">
+  <script src="/site.js?v=20261007-hq-sound" defer></script>
 </head>
-<body>
+<body class="film-home">
   <a class="skip-link" href="#main">跳到主要内容</a>
   <header class="site-header">
     <a class="brand" href="/zh/" aria-label="苋在首页">
@@ -34,24 +34,36 @@
   </header>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-mark"></span> 给正在发生的日子，一款自己的片方</p>
-        <h1 id="hero-title">把此刻拍成<br><em>自己的片方。</em></h1>
-        <p class="hero-deck">不止调色。把镜头放进一台游戏机、一扇冰箱，或一段只属于你的故事里。</p>
-        <div class="hero-actions">
-          <a class="button button-pink" href="#frames">逛逛片方图鉴 <span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">App Store 下载 <span aria-hidden="true">↗</span></a>
+    <section class="hero hero-film" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="sr-only">苋在 · 选好模板，一拍就是成片</h1>
+      <figure class="hero-film-figure">
+        <div class="hero-film-stage">
+          <video id="hero-video" class="hero-video" width="3840" height="1646" poster="/assets/video/hero-zh-poster.jpg?v=20261007-hq" data-landscape-poster="/assets/video/hero-zh-poster.jpg?v=20261007-hq" data-portrait-poster="/assets/video/hero-zh-portrait-poster.jpg?v=20261007-hq" preload="none" loop playsinline controls aria-label="苋在拍摄与片方效果演示" aria-describedby="hero-video-description">
+            <source data-src="/assets/video/hero-zh.mp4?v=20261007-hq" data-portrait-src="/assets/video/hero-zh-portrait.mp4?v=20261007-hq" type="video/mp4">
+          </video>
+          <picture class="hero-film-poster" aria-hidden="true">
+            <source media="(max-aspect-ratio: 4/5)" srcset="/assets/video/hero-zh-portrait-poster.jpg?v=20261007-hq">
+            <img src="/assets/video/hero-zh-poster.jpg?v=20261007-hq" width="3840" height="1646" alt="" fetchpriority="high">
+          </picture>
+          <button class="film-start" type="button" data-video-start aria-controls="hero-video" hidden><span class="film-start-icon" aria-hidden="true">▶</span><span>播放并开启声音</span></button>
+          <div class="hero-video-controls" hidden>
+            <button class="film-control" type="button" data-video-play aria-controls="hero-video">播放</button>
+            <button class="film-control" type="button" data-video-sound aria-controls="hero-video" aria-pressed="true">关闭声音</button>
+            <button class="film-control film-expand" type="button" data-video-expand aria-haspopup="dialog">放大观看 <span aria-hidden="true">↗</span></button>
+          </div>
         </div>
-        <p class="hero-note">29 款官方片方 · 12 款氛围预设 · 现场取景拍摄</p>
+        <figcaption>示例画面为 AI 生成，仅用于视觉展示。</figcaption>
+        <p id="hero-video-description" class="sr-only">演示从实时取景到拍摄成片，以及不同片方、氛围和角色的视觉效果。示例画面为 AI 生成，仅用于视觉展示。</p>
+        <noscript><a class="text-link" href="/assets/video/hero-zh.mp4?v=20261007-hq">观看演示视频 ↗</a></noscript>
+      </figure>
+      <div class="hero-actions">
+        <a class="button button-pink" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">App Store 下载 <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="#frames">浏览片方 <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="hero-art" aria-label="苋在片方成片示例">
-        <div class="hero-orbit orbit-one" aria-hidden="true">YOUR<br>FRAME</div>
-        <figure class="hero-image hero-image-game"><img src="/assets/templates/心动游戏机.png" alt="心动游戏机片方示例：粉色像素游戏机取景框" fetchpriority="high"><figcaption>01 / PLAY TODAY</figcaption></figure>
-        <figure class="hero-image hero-image-fridge"><img src="/assets/templates/甜心冰箱.png" alt="甜心冰箱片方示例：冰箱门框住拍摄画面" fetchpriority="high"><figcaption>GOOD MOOD, INSIDE</figcaption></figure>
-        <div class="hero-scribble" aria-hidden="true">拍下<br>喜欢的样子 <span>♥</span></div>
-      </div>
-      <a class="hero-scroll" href="#frames"><span></span> 往下看片方</a>
+      <dialog class="hero-video-dialog" aria-label="苋在拍摄与片方效果演示">
+        <button class="film-control film-close" type="button" data-video-close>关闭视频 <span aria-hidden="true">×</span></button>
+        <video class="hero-video-expanded" width="3840" height="1646" poster="/assets/video/hero-zh-poster.jpg?v=20261007-hq" preload="none" controls loop playsinline aria-label="苋在拍摄与片方效果演示"></video>
+      </dialog>
     </section>
 
     <section class="frame-intro section-pad" id="frames" aria-labelledby="frames-title">
@@ -101,9 +113,30 @@
       <div class="mood-bottom"><span>12 款氛围预设</span><span class="mood-line" aria-hidden="true"></span><span>从清晨到夜色，找到今天的颜色</span></div>
     </section>
 
-    <section class="ip-section" id="ip" aria-labelledby="ip-title">
-      <div class="ip-copy"><p class="eyebrow">YOUR CHARACTER, YOUR FRAME / 05</p><h2 id="ip-title">喜欢的角色，<br>也来<span>一起入镜。</span></h2><p>创建或选择自己的 IP，挑一个形态和动作，带它进入喜欢的片方。角色和形态图保存在这台设备。</p><a class="button button-dark" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">在苋在里创建 IP <span aria-hidden="true">↗</span></a></div>
-      <div class="ip-stage"><div class="ip-sun" aria-hidden="true"></div><img class="ip-mascot" src="/assets/mascot.png" alt="苋在的角色形象示例" loading="lazy"><img class="ip-frame" src="/assets/templates/闺蜜咖啡.png" alt="闺蜜咖啡片方成片示例" loading="lazy"><span class="ip-caption">YOU + YOUR FAVORITE CHARACTER</span></div>
+    <section class="ip-section ip-world" id="ip" aria-labelledby="ip-title">
+      <div class="ip-copy"><p class="eyebrow">YOUR CHARACTER, YOUR FRAME / 05</p><h2 id="ip-title">喜欢的角色，<br>也来<span>一起入镜。</span></h2><p>软乎乎的小苋，也有酷酷的小伙伴。创建或选择自己的 IP，挑一个形态和动作，带它进入喜欢的片方。</p><a class="button button-dark" href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer">在苋在里创建 IP <span aria-hidden="true">↗</span></a></div>
+      <figure class="ip-stage">
+        <div class="ip-orbit" aria-hidden="true"></div>
+        <span class="ip-stage-sticker" aria-hidden="true">HELLO,<br>LITTLE FRIEND!</span>
+        <img class="ip-star ip-star-tea" src="/assets/characters/xiaoxian-tea.webp" alt="抱着奶茶的小苋与小伙伴" width="506" height="551" loading="lazy" decoding="async">
+        <img class="ip-star ip-star-float" src="/assets/characters/xiaoxian-float.webp" alt="自在漂浮的粉色叶片小苋" width="864" height="882" loading="lazy" decoding="async">
+        <img class="ip-star ip-star-heart" src="/assets/characters/xiaoxian-heart.webp" alt="眨眼比心的小苋" width="294" height="314" loading="lazy" decoding="async">
+        <figcaption class="ip-caption">小苋的日常 · 喝奶茶、比个心、自在漂浮</figcaption>
+      </figure>
+      <div class="character-gallery" aria-labelledby="characters-title">
+        <div class="character-gallery-heading"><h3 id="characters-title">认识我们的 IP 小伙伴</h3><p>每一种性格，都有自己的可爱。</p></div>
+        <div class="character-lineup">
+          <figure class="character-card character-cream-bunny"><div class="character-portrait"><img src="/assets/characters/cream-bunny.webp" alt="奶油色毛绒兔，戴着粉色蝴蝶结与小铃铛" width="366" height="366" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">01</span>软乎乎的陪伴</figcaption></figure>
+          <figure class="character-card character-blue-plush"><div class="character-portrait"><img src="/assets/characters/blue-plush.webp" alt="蓝色毛绒独眼小怪兽，露出柔软的脚掌" width="652" height="652" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">02</span>抱住一点快乐</figcaption></figure>
+          <figure class="character-card character-cactus"><div class="character-portrait"><img src="/assets/characters/cactus.webp" alt="开着白花、围着米色围巾的绿色仙人掌角色" width="314" height="314" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">03</span>有刺，也有温柔</figcaption></figure>
+          <figure class="character-card character-pearl-spirit"><div class="character-portrait"><img src="/assets/characters/pearl-spirit.webp" alt="带着珍珠光泽、脸颊泛粉的透明小精灵" width="289" height="289" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">04</span>透明的小灵感</figcaption></figure>
+          <figure class="character-card character-hooded-rebel"><div class="character-portrait"><img src="/assets/characters/hooded-rebel.webp" alt="穿红黑斗篷、戴着角状兜帽的独眼角色" width="646" height="646" loading="lazy" decoding="async"></div><figcaption><span class="character-number" aria-hidden="true">05</span>今天，酷一点</figcaption></figure>
+        </div>
+        <figure class="character-family">
+          <figcaption><p class="eyebrow">THE ONE-EYED CLUB</p><h3>同一只眼睛，<br>不同的小宇宙。</h3><p>毛绒、透明、石头、金属……<br>换一种质感，也换一种心情。</p></figcaption>
+          <img src="/assets/characters/one-eyed-family.webp" alt="七款独眼 IP 合影，包含黑白兜帽、透明气泡、银色、黑金和石头质感角色" width="1246" height="830" loading="lazy" decoding="async">
+        </figure>
+      </div>
     </section>
 
     <section class="memory-section section-pad" id="memories" aria-labelledby="memory-title">

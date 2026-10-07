@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://rosehahah.github.io/xianzai-marketing-site/sitemap.xml

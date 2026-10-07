@@ -3,3 +3,6 @@ __pycache__/
 *.py[cod]
 .venv/
 site-dist.tar.gz
+
+# Rebuilt by GitHub Actions; keep one copy of source assets.
+/dist/
