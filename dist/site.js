@@ -84,7 +84,7 @@ if (grid) {
       const category = messages.categories[categoryKey(item)];
       return `
       <article class="frame-card" data-category="${categoryKey(item)}" style="animation-delay:${Math.min(index * 35, 280)}ms">
-        <a href="https://apps.apple.com/app/id6814311061" target="_blank" rel="noreferrer" aria-label="${messages.cardLabel(item.name)}">
+        <a href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer" aria-label="${messages.cardLabel(item.name)}">
           <div class="frame-card-image"><img src="${item.image}" alt="${messages.cardAlt(item.name, item.description)}" loading="lazy" decoding="async"><span class="card-category">${category}</span></div>
           <div class="frame-meta"><div><h3>${item.name}</h3><p>${item.description}</p></div><span class="card-arrow" aria-hidden="true">↗</span></div>
         </a>
