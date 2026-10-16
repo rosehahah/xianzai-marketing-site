@@ -1,6 +1,6 @@
 # 现场活动拍摄：支持与隐私页交付
 
-日期：2026-10-16（Asia/Shanghai）。本记录对应网站分支 `codex/event-photo-support-20261016` 的交付。已获本轮必要支持 / 隐私页发布授权，源码 `56f245cfe5fb7c83130a6bd1c475d9a223525807` 已 fast-forward 合并并推送 `main`，GitHub Pages 部署成功，四页已公共可访问。
+日期：2026-10-16（Asia/Shanghai）。已获本轮必要支持 / 隐私页发布授权，四页已公共可访问。首发源码为 `56f245cfe5fb7c83130a6bd1c475d9a223525807`，后续隐私事实修订为 `953f6fd4e2382ad7b9bd492ce5b66cc97641e9b9`；两次均正常 fast-forward 合并并推送 `main`，GitHub Pages 部署成功，最新公网核验见末节。
 
 ## 路由与内容
 
@@ -51,10 +51,16 @@
 
 平台构建提示 Node 20 action 兼容升级和 ubuntu-latest 后续版本迁移，未导致本次部署失败；本轮未扩大范围修改既有 workflow。
 
-## 后续事实修订（已核实，待部署验证）
+## 后续事实修订（已部署并公网验证）
 
 本地分支：`codex/event-photo-privacy-facts-20261016`。已完成项目地区、1 天 API / 服务日志配置的实际适用范围，以及管理员上传范围的中英文修订。新版正文明确 IP 推导的大致地区（国家 / 城市）不是 GPS，日志用于提供功能、故障排查和安全运维。保留 1 天不适用于管理员账户和模板数据库，也不推定所有服务商副本在 24 小时内删除。
 
 管理 API / 项目日志核查由 release_integrity 完成：项目恢复为 ACTIVE_HEALTHY，Auth health 及三个 catalog 请求均 HTTP 200。恢复后的实际 `edge_logs` 样本 6 条，IP、方法、路径、User-Agent、响应状态、耗时和 IP 派生国家 / 城市均为 6/6 非空，经纬度为 0/6；仅取字段存在计数，未读取或输出实际 IP 或地区值。另有 2 条 storage 日志及 64 条 Auth 服务启动日志，本轮未进行管理员登录，不能把启动日志当作管理员个人登录样本。组织有效 `log.retention_days` 仍为 1 天，额外 drains 关闭；Auth 的 Postgres 审计写入关闭不等于外部认证事件日志关闭。
 
 主任务已确认本轮正式 Release 构建和 135 项 Release 单元测试通过；检查中 MediaPipe / Clearcut 等相关符号、Google 指标日志字符串及 SDK 框架 / force_load 配置均为 0。由主任务据此授权发布全本机 Vision 的正式政策，最终 iPhoneOS Archive 仍会再次核对。本记录不把 Debug 研发功能描述为公众发行功能，公众产品页不加入研发 SDK 开关或同意流程。
+
+- 修订内容 commit：`953f6fd4e2382ad7b9bd492ce5b66cc97641e9b9`，由 `codex/event-photo-privacy-facts-20261016` fast-forward 合并至 `main` 并推送。
+- [GitHub Pages workflow 38909273604](https://github.com/rosehahah/xianzai-marketing-site/actions/runs/38909273604) 的 build / deploy 均成功，平台状态更新于 2026-10-16 21:38:02 +08:00。
+- 2026-10-16 21:38 +08:00 公网验证：四个中英文产品页及 CSS 全部 HTTP 200，逐字节匹配本地生产构建；两份隐私正文均包含新 IP 大致地区、1 天范围和管理员发布说明，canonical / 锚点 / 语言及产品页互链通过。
+- 原官网四个中英文首页 / 隐私路由仍为 HTTP 200；本次不修改原官网正文。
+- 最新逐页字节数、SHA-256 和检查结果见 [隐私事实修订公共验证 JSON](event-photo-privacy-facts-public-verification-20261016.json)，首发验证 JSON 作为历史保留。
