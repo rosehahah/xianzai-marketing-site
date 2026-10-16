@@ -31,7 +31,9 @@
 
 ## 事实边界与发布核对
 
-客户端可以核实请求载荷、本地处理和 Keychain 行为，不能证明 Supabase 托管日志的项目实际保留天数、完整访问主体或部署地区。正文披露可能存在的 IP / 路径等连接数据，说明服务约定和实际配置的边界，并提供查询 / 删除请求渠道；不虚构固定期限或“即时删除”。管理员与支持邮件的保留按用途说明，不承诺不存在的自助删除功能或回复时限。
+首次交付时，客户端核查仅能证明请求载荷、本地处理和 Keychain 行为，未核实 Supabase 日志保留期和地区。后续已通过管理 API 核实本项目位于 AWS `ap-northeast-2`；所属组织 entitlements 中 `log.retention_days` 为 `enabled=true,value=1,unit=days`，`log_drains` 和 `audit_log_drains` 均未启用。新版正文写明本项目服务配置的项目日志保留期为 1 天，并明确这不等于所有服务商安全日志、备份和法定资料在 24 小时内删除。完整访问主体及服务商独立日志仍不能仅凭客户端或 entitlement 响应证明。
+
+管理员发布范围已复核：`TemplatePublishValidator` 在 POST 前拒绝本地 Logo 和 `user:` LUT；请求上传模板文本、排版 / 滤镜设置和内置 / 云端素材引用，后台通过 `auth.uid` 记录 `updated_by` / `published_by`。正文不再笼统称管理员上传本地 Logo。管理员与支持邮件的保留按用途说明，不承诺不存在的自助删除功能或回复时限。
 
 服务商政策核对日期为 2026-10-16：[Supabase 隐私政策](https://supabase.com/privacy)、[Supabase DPA](https://supabase.com/legal/customer-resources/data-processing-addendum)、[GitHub 隐私声明](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)。服务商一般政策不替代具体项目后台配置核实，App Store 隐私标签仍由主任务结合最终二进制及服务配置判断。
 
@@ -48,3 +50,11 @@
 - 逐页字节数与 SHA-256 见 [公共验证 JSON](event-photo-support-public-verification-20261016.json)。
 
 平台构建提示 Node 20 action 兼容升级和 ubuntu-latest 后续版本迁移，未导致本次部署失败；本轮未扩大范围修改既有 workflow。
+
+## 后续事实修订（已核实，待部署验证）
+
+本地分支：`codex/event-photo-privacy-facts-20261016`。已完成项目地区、1 天 API / 服务日志配置的实际适用范围，以及管理员上传范围的中英文修订。新版正文明确 IP 推导的大致地区（国家 / 城市）不是 GPS，日志用于提供功能、故障排查和安全运维。保留 1 天不适用于管理员账户和模板数据库，也不推定所有服务商副本在 24 小时内删除。
+
+管理 API / 项目日志核查由 release_integrity 完成：项目恢复为 ACTIVE_HEALTHY，Auth health 及三个 catalog 请求均 HTTP 200。恢复后的实际 `edge_logs` 样本 6 条，IP、方法、路径、User-Agent、响应状态、耗时和 IP 派生国家 / 城市均为 6/6 非空，经纬度为 0/6；仅取字段存在计数，未读取或输出实际 IP 或地区值。另有 2 条 storage 日志及 64 条 Auth 服务启动日志，本轮未进行管理员登录，不能把启动日志当作管理员个人登录样本。组织有效 `log.retention_days` 仍为 1 天，额外 drains 关闭；Auth 的 Postgres 审计写入关闭不等于外部认证事件日志关闭。
+
+主任务已确认本轮正式 Release 构建和 135 项 Release 单元测试通过；检查中 MediaPipe / Clearcut 等相关符号、Google 指标日志字符串及 SDK 框架 / force_load 配置均为 0。由主任务据此授权发布全本机 Vision 的正式政策，最终 iPhoneOS Archive 仍会再次核对。本记录不把 Debug 研发功能描述为公众发行功能，公众产品页不加入研发 SDK 开关或同意流程。
