@@ -1,0 +1,103 @@
+{
+  "verified_at": "2026-10-16T20:58:25.862894+08:00",
+  "deployment_commit": "56f245cfe5fb7c83130a6bd1c475d9a223525807",
+  "workflow_url": "https://github.com/rosehahah/xianzai-marketing-site/actions/runs/38904154010",
+  "pages": [
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/",
+      "status": 200,
+      "bytes": 10025,
+      "sha256": "e0b0f25084089ab8bea9851dc5a1f9adf29a977a5faeea4d3e4205183cf33ad9",
+      "matches_local_build": true,
+      "lang": "zh-CN",
+      "scripts": 0,
+      "canonical": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/",
+      "anchor_targets": "pass"
+    },
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/privacy/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/privacy/",
+      "status": 200,
+      "bytes": 12283,
+      "sha256": "a6d543e7db561bc48a8d2aa53c89549efee00ca3c3af5467ebd1274d87f6581d",
+      "matches_local_build": true,
+      "lang": "zh-CN",
+      "scripts": 0,
+      "canonical": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/privacy/",
+      "anchor_targets": "pass"
+    },
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/en/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/en/",
+      "status": 200,
+      "bytes": 10090,
+      "sha256": "ddef778aa37cd8f82d8e59bc880c47a1d49c8629a2d68b4ade602d3b2636f428",
+      "matches_local_build": true,
+      "lang": "en",
+      "scripts": 0,
+      "canonical": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/en/",
+      "anchor_targets": "pass"
+    },
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/en/privacy/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/en/privacy/",
+      "status": 200,
+      "bytes": 12667,
+      "sha256": "a28ca095075eadfc44771830d9793a9de13789b8098d666cf1a7d8b6e849070e",
+      "matches_local_build": true,
+      "lang": "en",
+      "scripts": 0,
+      "canonical": "https://rosehahah.github.io/xianzai-marketing-site/event-photo/en/privacy/",
+      "anchor_targets": "pass"
+    }
+  ],
+  "resources": [
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo.css",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/event-photo.css",
+      "status": 200,
+      "bytes": 7094,
+      "sha256": "50a4af24699e7ba947aeb285482205bb2dfa15de881b06349399746fac5dbb50",
+      "matches_local_build": true
+    }
+  ],
+  "existing_site": [
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/zh/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/zh/",
+      "status": 200,
+      "bytes": 24361,
+      "sha256": "3e7f168cdc9a919d0b8ebf4b1221fd2f752360c8f1e16b7ca9bfcc4f1574bcad"
+    },
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/en/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/en/",
+      "status": 200,
+      "bytes": 24807,
+      "sha256": "2463ddee444ef02475f0b91c91016a1414438348d2cf58bc53d4d2df7ba28392"
+    },
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/zh/privacy/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/zh/privacy/",
+      "status": 200,
+      "bytes": 21672,
+      "sha256": "dedbb1cd87b8e1a1a86f805580c2f3888b7b87da0b41fbbf27391384850b2ea3"
+    },
+    {
+      "url": "https://rosehahah.github.io/xianzai-marketing-site/en/privacy/",
+      "final_url": "https://rosehahah.github.io/xianzai-marketing-site/en/privacy/",
+      "status": 200,
+      "bytes": 25362,
+      "sha256": "dd6c95e4415048d50af76522900493275a6a198ec70025185190125b5ba2c0af"
+    }
+  ],
+  "checks": {
+    "four_routes": "pass",
+    "css": "pass",
+    "language_and_product_links": "pass",
+    "no_page_scripts": "pass",
+    "matches_local_production_build": "pass",
+    "existing_routes_available": "pass"
+  }
+}

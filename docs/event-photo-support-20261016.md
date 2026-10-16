@@ -1,10 +1,10 @@
 # 现场活动拍摄：支持与隐私页交付
 
-日期：2026-10-16（Asia/Shanghai）。本记录对应网站分支 `codex/event-photo-support-20261016` 的本地交付，尚未推送或公开部署；实际部署由主任务核对后推进。
+日期：2026-10-16（Asia/Shanghai）。本记录对应网站分支 `codex/event-photo-support-20261016` 的交付。已获本轮必要支持 / 隐私页发布授权，源码 `56f245cfe5fb7c83130a6bd1c475d9a223525807` 已 fast-forward 合并并推送 `main`，GitHub Pages 部署成功，四页已公共可访问。
 
 ## 路由与内容
 
-| 用途 | 预期公共 URL |
+| 用途 | 已验证公共 URL |
 | --- | --- |
 | 中文支持 | https://rosehahah.github.io/xianzai-marketing-site/event-photo/ |
 | 中文隐私 | https://rosehahah.github.io/xianzai-marketing-site/event-photo/privacy/ |
@@ -35,4 +35,16 @@
 
 服务商政策核对日期为 2026-10-16：[Supabase 隐私政策](https://supabase.com/privacy)、[Supabase DPA](https://supabase.com/legal/customer-resources/data-processing-addendum)、[GitHub 隐私声明](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)。服务商一般政策不替代具体项目后台配置核实，App Store 隐私标签仍由主任务结合最终二进制及服务配置判断。
 
-主任务需要检查正文与最终 App 行为一致，再合并 / 推送本网站 `main`，等待 GitHub Pages 部署成功，并从公共 URL 重新读取四页。公共可用性验证之前，不应把预期 URL 写成“已上线”或将页面部署当作 App 已提交审核。
+主任务仍需检查正文与最终 App 行为及 App Store 隐私标签一致。页面发布仅代表支持网站已上线，不代表 App 已上传、已提交审核或已在 App Store 上线。
+
+## 真实部署与公共验证
+
+- 发布内容 commit：`56f245cfe5fb7c83130a6bd1c475d9a223525807`。
+- 合并前网站工作区干净，`main` 与远端均为 `3855b9b6f5c0ac787f5dc67ea877785583cb8c10`；采用 fast-forward，无强制推送或冲突覆盖。
+- [GitHub Pages workflow 38904154010](https://github.com/rosehahah/xianzai-marketing-site/actions/runs/38904154010) 的 `build`、`deploy` 均为 `success`，部署 job 完成于 2026-10-16 20:57:35 +08:00。
+- 2026-10-16 20:58 +08:00 从公共 HTTPS URL 读取：中英文支持及隐私四页和 `event-photo.css` 全部 HTTP 200；HTML 与 CSS 逐字节匹配本地生产构建。
+- 四页 canonical、语言标签、目录锚点、产品页及中英文互链检查通过；生成源 HTML 中脚本数量为 0。
+- 原官网 `/zh/`、`/en/`、`/zh/privacy/`、`/en/privacy/` 公共读取均 HTTP 200。
+- 逐页字节数与 SHA-256 见 [公共验证 JSON](event-photo-support-public-verification-20261016.json)。
+
+平台构建提示 Node 20 action 兼容升级和 ubuntu-latest 后续版本迁移，未导致本次部署失败；本轮未扩大范围修改既有 workflow。
