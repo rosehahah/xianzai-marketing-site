@@ -9,6 +9,16 @@
 
 原有 `/terms/`、`/privacy/` 和 `.html` 地址继续提供中文版，避免 App 内及外部旧链接失效。首页源文件为 `index.html` 和 `index.en.html`，法律正文源文件位于 `content/`。
 
+## 现场活动拍摄产品支持
+
+独立产品“现场活动拍摄”的支持页和隐私页使用单独正文与样式，不复用苋在 App 的服务说明：
+
+- 中文支持：`/event-photo/`；中文隐私：`/event-photo/privacy/`
+- English support: `/event-photo/en/`; privacy: `/event-photo/en/privacy/`
+- 正文：`content/event-photo-*.md`；样式：`event-photo.css`；由同一 `build.py` 生成。
+
+四页均为纯静态内容，无页面脚本、追踪 SDK、第三方字体、账号或站外购买入口。保留普通拍摄、网络素材、Apple 购买和授权管理员发布的不同数据边界。英文页面说明当前 App 界面为简体中文，价格按 Apple 当地实际显示。部署与 App Store 审核是独立状态；页面的本地验收见 [支持页交付记录](docs/event-photo-support-20261016.md)。
+
 ## GitHub Pages
 
 公开地址：`https://rosehahah.github.io/xianzai-marketing-site/`。仓库使用 Actions 自动构建，并生成语言路由、`hreflang`、canonical、`robots.txt` 和 `sitemap.xml`。

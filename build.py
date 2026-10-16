@@ -35,7 +35,7 @@ if DIST.exists():
     shutil.rmtree(DIST)
 DIST.mkdir(parents=True)
 
-for name in ('site.css', 'site.js', 'favicon.png'):
+for name in ('site.css', 'site.js', 'event-photo.css', 'favicon.png'):
     source = ROOT / name
     target = DIST / name
     if source.suffix in ('.css', '.js', '.svg'):
@@ -163,10 +163,89 @@ for slug in ('terms', 'privacy'):
     write_route(slug, page)
     write_text(DIST / f'{slug}.html', page)
 
+
+def event_photo_page(kind: str, markdown: str, locale: str = 'zh') -> str:
+    """Independent product pages: no homepage scripts, cookies, or external assets."""
+    is_privacy = kind == 'privacy'
+    english = locale == 'en'
+    product_home = '/event-photo/en/' if english else '/event-photo/'
+    privacy_route = product_home + 'privacy/'
+    title = ('Privacy Policy' if is_privacy else 'Support & Help') if english else ('隐私政策' if is_privacy else '支持与帮助')
+    route = privacy_route if is_privacy else product_home
+    other_home = '/event-photo/' if english else '/event-photo/en/'
+    other_route = other_home + ('privacy/' if is_privacy else '')
+    canonical = SITE_URL + route if SITE_URL else route
+    description = ('现场活动拍摄如何处理本地照片、系统权限、模板素材、免费首场资格和 Apple 购买。'
+                   if is_privacy else '现场活动拍摄的拍摄保存、免费首场、Pro 购买与恢复帮助，以及官方联系渠道。')
+    if english:
+        description = ('How 现场活动拍摄 handles local photos, permissions, template downloads, free-event allowance and Apple purchases.'
+                       if is_privacy else 'Camera, saving, free-event allowance, Pro purchase and restore help for 现场活动拍摄.')
+    article = renderer.render(markdown)
+    section_number = 0
+    headings = []
+
+    def anchor_heading(match):
+        nonlocal section_number
+        section_number += 1
+        anchor = f'section-{section_number}'
+        headings.append((anchor, match.group(1)))
+        return f'<h2 id="{anchor}">{match.group(1)}</h2>'
+
+    article = re.sub(r'<h2>(.*?)</h2>', anchor_heading, article)
+    contents = ''.join(f'<li><a href="#{anchor}">{heading}</a></li>' for anchor, heading in headings)
+    lede = ('普通拍摄在设备上处理；联网素材、Apple 购买和管理员模板发布分别说明。'
+            if is_privacy else '活动前设好文字、Logo 和色调，现场直接拍出统一成片。拍摄、保存和购买的问题，从这里开始。')
+    if english:
+        lede = ('Ordinary captures are processed on your device. Downloads, Apple purchases and authorized template publishing are explained separately.'
+                if is_privacy else 'Set your event text, logo and color style before shooting. Find help with capturing, saving and Pro here. The app interface is currently in Simplified Chinese.')
+    quick_start = '' if is_privacy else '''<section class="event-start" aria-labelledby="start-title">
+<div><span class="event-number">01—03</span><h2 id="start-title">从一场活动开始</h2></div>
+<ol><li><strong>创建活动</strong><span>选择活动场景，挑好模板。</span></li><li><strong>设好风格</strong><span>改文字、Logo 和滤镜强度。</span></li><li><strong>现场拍摄</strong><span>先拍出第一张，再继续记录。</span></li></ol>
+<p class="event-scenes">茶咖相聚 <span>·</span> 灵感工坊 <span>·</span> 生活市集 <span>·</span> 分享沙龙 <span>·</span> 户外同行</p>
+</section>'''
+    if english and not is_privacy:
+        quick_start = '''<section class="event-start" aria-labelledby="start-title">
+<div><span class="event-number">01—03</span><h2 id="start-title">Start with one event</h2></div>
+<ol><li><strong>Create an event</strong><span>Choose a scene and a template.</span></li><li><strong>Set your style</strong><span>Edit text, logo and filter intensity.</span></li><li><strong>Capture the event</strong><span>Save your first photo, then keep shooting.</span></li></ol>
+<p class="event-scenes">Tea &amp; coffee <span>·</span> Creative workshops <span>·</span> Lifestyle markets <span>·</span> Sharing salons <span>·</span> Outdoor gatherings</p>
+</section>'''
+    support_label = 'Support' if english else '支持帮助'
+    privacy_label = 'Privacy' if english else '隐私政策'
+    lang = 'en' if english else 'zh-CN'
+    other_lang = 'zh-CN' if english else 'en'
+    contact_text = 'Need more help?' if english else '需要进一步帮助？'
+    contact_copy = 'Developer / operator: 韩月 (Han Yue)<br>Email us for product support or privacy requests.' if english else '开发者 / 运营者：韩月<br>产品支持与隐私请求均可通过邮件联系。'
+    return f'''<!doctype html>
+<html lang="{lang}"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f7f3"><meta name="robots" content="index,follow">
+<meta name="description" content="{description}"><meta name="referrer" content="strict-origin-when-cross-origin">
+<title>{title} | 现场活动拍摄</title><link rel="canonical" href="{canonical}">
+<link rel="alternate" hreflang="{lang}" href="{route}"><link rel="alternate" hreflang="{other_lang}" href="{other_route}">
+<link rel="stylesheet" href="/event-photo.css">
+</head><body class="event-page">
+<a class="event-skip" href="#main">{'Skip to content' if english else '跳到正文'}</a>
+<header class="event-header"><a class="event-brand" href="{product_home}"><span class="event-mark" aria-hidden="true"></span><span>现场活动拍摄</span></a><nav aria-label="{'Product information' if english else '产品信息'}"><a href="{product_home}"{' aria-current="page"' if not is_privacy else ''}>{support_label}</a><a href="{privacy_route}"{' aria-current="page"' if is_privacy else ''}>{privacy_label}</a><a href="{other_route}" lang="{other_lang}" hreflang="{other_lang}">{'中文' if english else 'English'}</a></nav></header>
+<main id="main" class="event-main"><section class="event-intro"><p class="event-kicker">{'PRIVACY' if is_privacy else 'SUPPORT'} / 现场活动拍摄</p><h1>{title}<span class="event-title-square" aria-hidden="true"></span></h1><p class="event-lede">{lede}</p><p class="event-updated">{'Updated: October 16, 2026' if english else '更新日期：2026 年 10 月 16 日'}</p></section>
+{quick_start}
+<div class="event-reading"><aside class="event-toc"><h2>{'On this page' if english else '本页内容'}</h2><ol>{contents}</ol></aside><article class="event-content" aria-label="{title}">{article}</article></div>
+<section class="event-contact" aria-labelledby="contact-title"><div><p class="event-kicker">CONTACT</p><h2 id="contact-title">{contact_text}</h2><p>{contact_copy}</p></div><a href="mailto:hanr6969@gmail.com">hanr6969@gmail.com <span aria-hidden="true">↗</span></a></section>
+</main>
+<footer class="event-footer"><span>© 2026 韩月 · 现场活动拍摄</span><nav aria-label="{'Footer' if english else '页脚'}"><a href="{product_home}">{support_label}</a><a href="{privacy_route}">{privacy_label}</a><a href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/">{'Apple Standard EULA' if english else 'Apple 标准使用条款'}</a></nav></footer>
+</body></html>'''
+
+
+for locale, product_route in (('zh', 'event-photo'), ('en', 'event-photo/en')):
+    for kind in ('support', 'privacy'):
+        suffix = '.en' if locale == 'en' else ''
+        markdown = (ROOT / 'content' / f'event-photo-{kind}{suffix}.md').read_text(encoding='utf-8')
+        route = product_route + ('/privacy' if kind == 'privacy' else '')
+        write_route(route, event_photo_page(kind, markdown, locale))
+
 write_text(DIST / 'robots.txt', 'User-agent: *\nAllow: /\n' + (f'Sitemap: {SITE_URL}/sitemap.xml\n' if SITE_URL else ''))
 
 if SITE_URL:
-    urls = ('/zh/', '/en/', '/zh/terms/', '/en/terms/', '/zh/privacy/', '/en/privacy/')
+    urls = ('/zh/', '/en/', '/zh/terms/', '/en/terms/', '/zh/privacy/', '/en/privacy/', '/event-photo/', '/event-photo/privacy/', '/event-photo/en/', '/event-photo/en/privacy/')
     entries = ''.join(f'<url><loc>{urljoin(SITE_URL + "/", path.lstrip("/"))}</loc></url>' for path in urls)
     sitemap = f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{entries}</urlset>'
     write_text(DIST / 'sitemap.xml', sitemap)
