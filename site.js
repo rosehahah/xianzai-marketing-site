@@ -64,6 +64,30 @@ if (menuButton && mainNav) {
   });
 }
 
+// Browser-native lazy loading can fetch megabytes several screens ahead of the
+// viewport. Keep those image URLs inert until they are close to being visible.
+const loadDeferredImage = (image) => {
+  if (!image.dataset.src) return;
+  image.src = image.dataset.src;
+  delete image.dataset.src;
+};
+const lazyImageObserver = typeof IntersectionObserver === 'function'
+  ? new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      if (entry.target.isConnected) loadDeferredImage(entry.target);
+    });
+  }, { rootMargin: '250px 0px', threshold: 0 })
+  : null;
+const observeDeferredImages = (root = document) => {
+  root.querySelectorAll('img[data-src]').forEach((image) => {
+    if (lazyImageObserver) lazyImageObserver.observe(image);
+    else loadDeferredImage(image);
+  });
+};
+observeDeferredImages();
+
 const grid = document.querySelector('#frame-grid');
 if (grid) {
   const filterButtons = [...document.querySelectorAll('[data-filter]')];
@@ -80,16 +104,18 @@ if (grid) {
   const drawCards = () => {
     const filtered = currentFilter === 'all' ? allFrames : allFrames.filter((item) => categoryKey(item) === currentFilter);
     const visible = showAll || currentFilter !== 'all' ? filtered : filtered.slice(0, initialCount);
+    grid.querySelectorAll('img[data-src]').forEach((image) => lazyImageObserver?.unobserve(image));
     grid.innerHTML = visible.map((item, index) => {
       const category = messages.categories[categoryKey(item)];
       return `
       <article class="frame-card" data-category="${categoryKey(item)}" style="animation-delay:${Math.min(index * 35, 280)}ms">
         <a href="https://apps.apple.com/cn/app/%E8%8B%8B%E5%9C%A8/id6814311061" target="_blank" rel="noreferrer" aria-label="${messages.cardLabel(item.name)}">
-          <div class="frame-card-image"><img src="${item.image}" alt="${messages.cardAlt(item.name, item.description)}" loading="lazy" decoding="async"><span class="card-category">${category}</span></div>
+          <div class="frame-card-image"><img data-src="${item.image}" alt="${messages.cardAlt(item.name, item.description)}" loading="lazy" decoding="async"><span class="card-category">${category}</span></div>
           <div class="frame-meta"><div><h3>${item.name}</h3><p>${item.description}</p></div><span class="card-arrow" aria-hidden="true">↗</span></div>
         </a>
       </article>`;
     }).join('');
+    observeDeferredImages(grid);
     const selectedCategory = messages.categories[currentFilter];
     countLabel.textContent = currentFilter === 'all'
       ? messages.countAll(visible.length, allFrames.length)
@@ -131,7 +157,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
-// Attach only this page's film, and only when viewing or explicitly playing it.
+// Attach only this page's web film, when visible or explicitly requested.
 const heroVideo = document.querySelector('#hero-video');
 if (heroVideo) {
   const stage = heroVideo.closest('.hero-film-stage');
@@ -143,36 +169,98 @@ if (heroVideo) {
   const expandButton = stage.querySelector('[data-video-expand]');
   const dialog = document.querySelector('.hero-video-dialog');
   const expandedVideo = dialog.querySelector('video');
+  const expandedStage = expandedVideo.parentElement;
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const connection = navigator.connection;
   const portraitPreference = window.matchMedia('(max-aspect-ratio: 4/5)');
-  const selectedSource = () => portraitPreference.matches ? source.dataset.portraitSrc : source.dataset.src;
-  const selectPoster = () => { heroVideo.poster = portraitPreference.matches ? heroVideo.dataset.portraitPoster : heroVideo.dataset.landscapePoster; };
-  selectPoster();
+  const selectedSource = (highQuality = false) => portraitPreference.matches
+    ? highQuality ? source.dataset.hdPortraitSrc : source.dataset.portraitSrc
+    : highQuality ? source.dataset.hdSrc : source.dataset.src;
   const labels = isEnglish
-    ? { play: 'Play', playWithSound: 'Play with sound', pause: 'Pause', soundOn: 'Sound on', soundOff: 'Sound off', error: 'Video unavailable. Please try again later.' }
-    : { play: '播放', playWithSound: '播放并开启声音', pause: '暂停', soundOn: '开启声音', soundOff: '关闭声音', error: '视频暂时无法播放，请稍后重试。' };
+    ? { play: 'Play', pause: 'Pause', soundOn: 'Sound on', soundOff: 'Sound off', error: 'Video unavailable. Please try again later.' }
+    : { play: '播放', pause: '暂停', soundOn: '开启声音', soundOff: '关闭声音', error: '视频暂时无法播放，请稍后重试。' };
   let inView = false;
   let manuallyPaused = false;
   let explicitlyStarted = false;
   let playbackFailed = false;
   let autoplayBlocked = false;
   let dialogWasPlaying = false;
+  let expandedWasPlayingBeforeHide = false;
   let playAttempt = 0;
+  let expandedLoad = 0;
+  let pendingExpandedSeek;
   const automaticPlaybackAllowed = () => !motionPreference.matches && !connection?.saveData;
   const wantsPlayback = () => inView && !document.hidden && !dialog.open && !manuallyPaused
     && !playbackFailed && (explicitlyStarted || automaticPlaybackAllowed());
 
+  // A play promise is not evidence of a painted frame. Keep the cover until the
+  // browser presents a frame; older browsers use decoded data and two paint ticks.
+  const frameCover = (video, container) => {
+    let generation = 0;
+    let frameRequest = null;
+    let fallbackQueued = false;
+    const reveal = (token) => {
+      if (token === generation && video.readyState >= 2 && video.videoWidth > 0) {
+        container.classList.add('has-frame');
+      }
+    };
+    const watch = () => {
+      if (container.classList.contains('has-frame')) return;
+      const token = generation;
+      if (video.requestVideoFrameCallback) {
+        if (frameRequest === null) {
+          frameRequest = video.requestVideoFrameCallback(() => {
+            if (token !== generation) return;
+            frameRequest = null;
+            reveal(token);
+            // Metadata seeking can temporarily invalidate the presented frame.
+            if (!container.classList.contains('has-frame')) watch();
+          });
+        }
+      } else if (video.readyState >= 2 && !fallbackQueued) {
+        fallbackQueued = true;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (token === generation) fallbackQueued = false;
+          reveal(token);
+        }));
+      }
+    };
+    video.addEventListener('loadeddata', watch);
+    video.addEventListener('playing', watch);
+    video.addEventListener('seeked', watch);
+    return {
+      watch,
+      reset: () => {
+        generation += 1;
+        if (frameRequest !== null) video.cancelVideoFrameCallback?.(frameRequest);
+        frameRequest = null;
+        fallbackQueued = false;
+        container.classList.remove('has-frame');
+      },
+    };
+  };
+  const heroCover = frameCover(heroVideo, stage);
+  const expandedCover = frameCover(expandedVideo, expandedStage);
   const attachSource = () => {
     if (!source.hasAttribute('src')) {
       source.src = selectedSource();
+      heroVideo.load();
+      heroCover.watch();
+    }
+  };
+  const unloadHeroSource = () => {
+    playAttempt += 1;
+    heroCover.reset();
+    heroVideo.pause();
+    if (source.hasAttribute('src')) {
+      source.removeAttribute('src');
       heroVideo.load();
     }
   };
   const updateControls = () => {
     const playing = !heroVideo.paused && !heroVideo.ended;
-    playButton.textContent = playing ? labels.pause : autoplayBlocked ? labels.playWithSound : labels.play;
-    startButton.hidden = !autoplayBlocked;
+    playButton.textContent = playing ? labels.pause : labels.play;
+    startButton.hidden = playing || !(autoplayBlocked || playbackFailed || (!explicitlyStarted && !automaticPlaybackAllowed()));
     soundButton.textContent = heroVideo.muted ? labels.soundOn : labels.soundOff;
     soundButton.setAttribute('aria-pressed', String(!heroVideo.muted));
     stage.classList.toggle('is-playing', playing);
@@ -181,6 +269,7 @@ if (heroVideo) {
     const attempt = ++playAttempt;
     if (!wantsPlayback()) {
       heroVideo.pause();
+      updateControls();
       return;
     }
     attachSource();
@@ -188,98 +277,116 @@ if (heroVideo) {
       await heroVideo.play();
       if (!wantsPlayback()) heroVideo.pause();
     } catch (error) {
-      // Keep sound enabled when policy blocks autoplay; a real click retries playback.
-      if (attempt === playAttempt && wantsPlayback()) {
-        autoplayBlocked = error.name === 'NotAllowedError' && !heroVideo.muted;
+      // Muted playback can also be blocked. Leave a real-click entry available.
+      if (attempt === playAttempt && wantsPlayback() && error.name !== 'AbortError') {
+        autoplayBlocked = error.name === 'NotAllowedError';
         playbackFailed = true;
       }
       updateControls();
     }
   };
+  const startPlayback = () => {
+    manuallyPaused = false;
+    explicitlyStarted = true;
+    playbackFailed = false;
+    autoplayBlocked = false;
+    playButton.removeAttribute('title');
+    if (heroVideo.error) {
+      heroCover.reset();
+      heroVideo.load();
+    }
+    reconcilePlayback();
+  };
 
-  heroVideo.muted = false;
-  heroVideo.defaultMuted = false;
+  heroVideo.muted = true;
+  heroVideo.defaultMuted = true;
   heroVideo.volume = 1;
   heroVideo.controls = false;
   controls.hidden = false;
   heroVideo.addEventListener('playing', () => {
     if (!wantsPlayback()) { heroVideo.pause(); return; }
     autoplayBlocked = false;
-    stage.classList.add('has-frame');
     updateControls();
   });
   heroVideo.addEventListener('pause', updateControls);
   heroVideo.addEventListener('volumechange', updateControls);
   heroVideo.addEventListener('error', () => {
     playbackFailed = true;
-    stage.classList.remove('has-frame', 'is-playing');
     playButton.title = labels.error;
     updateControls();
   });
   playButton.addEventListener('click', () => {
     if (!heroVideo.paused) {
       manuallyPaused = true;
+      reconcilePlayback();
     } else {
-      manuallyPaused = false;
-      explicitlyStarted = true;
-      playbackFailed = false;
-      autoplayBlocked = false;
-      playButton.removeAttribute('title');
-      if (heroVideo.error) heroVideo.load();
+      startPlayback();
     }
-    reconcilePlayback();
   });
-  startButton.addEventListener('click', () => {
-    heroVideo.muted = false;
-    manuallyPaused = false;
-    explicitlyStarted = true;
-    playbackFailed = false;
-    autoplayBlocked = false;
-    if (heroVideo.error) heroVideo.load();
-    updateControls();
-    reconcilePlayback();
-  });
+  startButton.addEventListener('click', startPlayback);
   soundButton.addEventListener('click', () => {
     heroVideo.muted = !heroVideo.muted;
-    if (heroVideo.paused) {
-      manuallyPaused = false;
-      explicitlyStarted = true;
-      playbackFailed = false;
-      autoplayBlocked = false;
-      reconcilePlayback();
-    }
+    if (heroVideo.paused) startPlayback();
     updateControls();
   });
 
-  const observer = new IntersectionObserver(([entry]) => {
-    inView = entry.isIntersecting;
-    reconcilePlayback();
-  }, { threshold: 0.2 });
-  observer.observe(stage);
-  portraitPreference.addEventListener('change', () => {
-    const hadSource = source.hasAttribute('src');
-    selectPoster();
-    stage.classList.remove('has-frame', 'is-playing');
-    heroVideo.pause();
-    if (hadSource) {
-      source.removeAttribute('src');
-      heroVideo.load();
-      playbackFailed = false;
+  if (typeof IntersectionObserver === 'function') {
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
       reconcilePlayback();
+    }, { threshold: 0.2 });
+    observer.observe(stage);
+  } else {
+    inView = true;
+    reconcilePlayback();
+  }
+
+  const loadExpandedSource = (startTime) => {
+    const load = ++expandedLoad;
+    const nextSource = selectedSource(true);
+    if (pendingExpandedSeek) expandedVideo.removeEventListener('loadedmetadata', pendingExpandedSeek);
+    if (expandedVideo.getAttribute('src') !== nextSource) {
+      expandedCover.reset();
+      expandedVideo.width = portraitPreference.matches ? 1620 : 3840;
+      expandedVideo.height = portraitPreference.matches ? 2880 : 1646;
+      expandedVideo.src = nextSource;
+      expandedVideo.load();
     }
-    if (dialog.open) {
-      expandedVideo.src = selectedSource();
-      expandedVideo.poster = heroVideo.poster;
+    pendingExpandedSeek = () => {
+      if (load !== expandedLoad || !dialog.open) return;
+      if (Number.isFinite(startTime)) {
+        const end = Number.isFinite(expandedVideo.duration) ? Math.max(0, expandedVideo.duration - 0.05) : startTime;
+        expandedVideo.currentTime = Math.min(startTime, end);
+      }
+      pendingExpandedSeek = undefined;
+    };
+    if (expandedVideo.readyState >= 1) pendingExpandedSeek();
+    else expandedVideo.addEventListener('loadedmetadata', pendingExpandedSeek, { once: true });
+    expandedCover.watch();
+    expandedVideo.play().catch(() => {}); // Native controls remain usable when policy blocks playback.
+  };
+  portraitPreference.addEventListener('change', () => {
+    unloadHeroSource();
+    playbackFailed = false;
+    autoplayBlocked = false;
+    if (dialog.open) loadExpandedSource(expandedVideo.currentTime);
+    reconcilePlayback();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      expandedWasPlayingBeforeHide = dialog.open && !expandedVideo.paused;
+      expandedVideo.pause();
+    } else if (dialog.open && expandedWasPlayingBeforeHide) {
+      expandedWasPlayingBeforeHide = false;
       expandedVideo.play().catch(() => {});
     }
+    reconcilePlayback();
   });
-  document.addEventListener('visibilitychange', reconcilePlayback);
   const preferenceChanged = () => {
     explicitlyStarted = false;
-    if (!automaticPlaybackAllowed()) {
-      heroVideo.pause();
-      stage.classList.remove('has-frame', 'is-playing');
-    }
+    playbackFailed = false;
+    autoplayBlocked = false;
+    if (!automaticPlaybackAllowed()) unloadHeroSource();
     reconcilePlayback();
   };
   motionPreference.addEventListener('change', preferenceChanged);
@@ -293,17 +400,16 @@ if (heroVideo) {
 
   expandButton.addEventListener('click', () => {
     dialogWasPlaying = !heroVideo.paused;
+    const startTime = heroVideo.currentTime;
     heroVideo.pause();
-    if (expandedVideo.getAttribute('src') !== selectedSource()) expandedVideo.src = selectedSource();
-    expandedVideo.poster = heroVideo.poster;
+    // Reuse the selected responsive cover only after opening; do not preload HD.
+    if (!expandedStage.querySelector('picture')) {
+      expandedStage.appendChild(stage.querySelector('picture').cloneNode(true));
+    }
     expandedVideo.muted = heroVideo.muted;
     expandedVideo.volume = heroVideo.volume;
-    const startTime = heroVideo.currentTime;
-    const seek = () => { expandedVideo.currentTime = startTime; };
-    if (expandedVideo.readyState >= 1) seek();
-    else expandedVideo.addEventListener('loadedmetadata', seek, { once: true });
     dialog.showModal();
-    expandedVideo.play().catch(() => {}); // Native controls remain available if play is denied.
+    loadExpandedSource(startTime);
   });
   dialog.querySelector('[data-video-close]').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', (event) => {
@@ -312,6 +418,10 @@ if (heroVideo) {
     if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
   });
   dialog.addEventListener('close', () => {
+    expandedLoad += 1;
+    expandedWasPlayingBeforeHide = false;
+    if (pendingExpandedSeek) expandedVideo.removeEventListener('loadedmetadata', pendingExpandedSeek);
+    pendingExpandedSeek = undefined;
     expandedVideo.pause();
     heroVideo.muted = expandedVideo.muted;
     heroVideo.volume = expandedVideo.volume;
