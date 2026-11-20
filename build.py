@@ -13,6 +13,8 @@ DIST = ROOT / 'dist'
 BASE_PATH = os.environ.get('SITE_BASE_PATH', '').strip('/')
 BASE_PREFIX = f'/{BASE_PATH}' if BASE_PATH else ''
 SITE_URL = os.environ.get('SITE_URL', '').rstrip('/')
+# Verified against the approved xiannow.top website record on 2026-11-20.
+ICP_REGISTRATION = '<div class="footer-registration"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" lang="zh-CN">京ICP备2025150389号-2</a></div>'
 
 
 def with_base_path(value: str) -> str:
@@ -77,6 +79,7 @@ def root_language_page() -> str:
 }}());
 </script></head><body class="language-page">
 <main class="language-card"><img src="/assets/app-icon.png" alt="" width="76" height="76"><p class="legal-kicker">XIANNow / 苋在</p><h1>Choose your language<br><span>选择语言</span></h1><div class="language-actions"><a class="button button-dark" href="/en/" hreflang="en">English</a><a class="button button-pink" href="/zh/" hreflang="zh-CN">中文</a></div></main>
+<footer class="language-footer">{ICP_REGISTRATION}</footer>
 </body></html>'''
 
 
@@ -142,7 +145,7 @@ def legal_page(locale: str, slug: str, markdown: str) -> str:
 </head><body class="legal-page">
 <header class="legal-top"><a class="legal-back" href="/{locale}/">{copy['back']}</a><a class="brand" href="/{locale}/" aria-label="{copy['home_label']}"><img src="/assets/app-icon.png" alt="" width="40" height="40"><span>{copy['brand']}</span></a><nav class="legal-top-links" aria-label="{copy['nav_label']}"><a href="/{locale}/terms/">{copy['terms']}</a><a href="/{locale}/privacy/">{copy['privacy']}</a><a class="language-link" href="/{other_locale}/{slug}/" hreflang="{LEGAL_LOCALES[other_locale]['lang']}" aria-label="{copy['switch_label']}">{copy['switch_text']}</a></nav></header>
 <main class="legal-main"><p class="legal-kicker">XIÁNZÀI / LEGAL</p><h1>{title}</h1><article class="legal-content">{article}</article></main>
-<footer class="site-footer legal-footer"><div class="footer-brand"><a class="brand" href="/{locale}/"><img src="/assets/app-icon.png" alt="" width="38" height="38"><span>{copy['brand']}</span></a><p>{copy['tagline']}</p></div><nav class="footer-links" aria-label="{copy['nav_label']}"><a href="/{locale}/terms/">{copy['terms']}</a><a href="/{locale}/privacy/">{copy['privacy']}</a><a href="/{locale}/#faq">{copy['support']}</a><a href="/{locale}/">{copy['back_home']}</a></nav><div class="footer-bottom"><span>© 2026 {copy['brand']}</span><span>{copy['version']} · {title}</span></div></footer>
+<footer class="site-footer legal-footer"><div class="footer-brand"><a class="brand" href="/{locale}/"><img src="/assets/app-icon.png" alt="" width="38" height="38"><span>{copy['brand']}</span></a><p>{copy['tagline']}</p></div><nav class="footer-links" aria-label="{copy['nav_label']}"><a href="/{locale}/terms/">{copy['terms']}</a><a href="/{locale}/privacy/">{copy['privacy']}</a><a href="/{locale}/#faq">{copy['support']}</a><a href="/{locale}/">{copy['back_home']}</a></nav><div class="footer-bottom"><span>© 2026 {copy['brand']}</span><span>{copy['version']} · {title}</span></div>{ICP_REGISTRATION}</footer>
 <script>document.querySelectorAll('.language-link').forEach(function (link) {{ link.addEventListener('click', function () {{ try {{ window.localStorage.setItem('xiannow-language', '{other_locale}'); }} catch (_) {{}} }}); }});</script>
 </body></html>'''
 

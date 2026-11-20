@@ -144,3 +144,11 @@ html[lang="zh-CN"] .ip-world .ip-copy h2 span{white-space:nowrap}
 .film-start-icon{display:grid;place-items:center;width:58px;height:58px;padding-left:4px;border:1px solid rgba(255,255,255,.65);border-radius:50%;font-size:1.2rem}
 .film-start:hover{background:rgba(5,5,5,.85);border-color:#fff}
 .film-start:focus-visible{outline:3px solid #fff;outline-offset:5px}
+
+/* Website ICP registration: visible without JavaScript on desktop and mobile. */
+.footer-registration{grid-column:1/-1;text-align:center;font-size:.8rem;line-height:1.6;color:#65656e}
+.footer-registration a{display:inline-block;padding:8px 4px;color:inherit;text-underline-offset:3px}
+.footer-registration a:hover{color:var(--ink)}
+.footer-registration a:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:3px}
+.language-footer{padding:16px 20px}
+@media(max-width:720px){.site-footer .footer-registration{margin-top:18px}}
